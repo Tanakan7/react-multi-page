@@ -1,5 +1,3 @@
-import React from 'react'
+import React from 'react';
 
-export const Map = () => {
-  return <div>aaa</div>
-}
+export const Map = () => <div>aaa</div>;
