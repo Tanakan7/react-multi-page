@@ -1,0 +1,12 @@
+node_modules/
+*.log
+.DS_store
+tmp/
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+dist/**/*.txt
+dist/dist.zip

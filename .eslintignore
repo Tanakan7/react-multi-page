@@ -1,0 +1,10 @@
+node_modules/
+lib/
+build/
+src/js/script.js
+overwriteDataList.js
+metalsmith.js
+config.js
+babel.config.js
+webpack.config.js
+config/

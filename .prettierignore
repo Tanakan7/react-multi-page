@@ -1,0 +1,8 @@
+/*.js
+build/
+static/
+dist/
+/**/*.css
+/**/*.scss
+/**/*.html
+/**/*.md
