@@ -1,21 +1,21 @@
-const path = require('path')
-const { merge } = require('webpack-merge')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const pathConf = require('./conf.path')
+const path = require('path');
+const { merge } = require('webpack-merge');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const pathConf = require('./conf.path');
 
-const outputFile = '[name]'
-const assetFile = '[name]'
+const outputFile = '[name]';
+const assetFile = '[name]';
 
-const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const StylelintPlugin = require('stylelint-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const confBase = require('./conf.base')
+const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const confBase = require('./conf.base');
 
 module.exports = (env, argv) => {
   // conf.base.jsのentryで追加したhtmlファイルを動的に生成する。
   const createHtmlPlugins = entry => {
-    const htmpPlugins = []
+    const htmpPlugins = [];
     Object.keys(entry).forEach(key => {
       htmpPlugins.push(
         new HtmlWebpackPlugin({
@@ -42,10 +42,10 @@ module.exports = (env, argv) => {
           files: './src/**/*.scss',
           fix: true,
         }),
-      )
-    })
-    return htmpPlugins
-  }
+      );
+    });
+    return htmpPlugins;
+  };
 
   return merge(confBase({ argv, outputFile, assetFile }), {
     devtool: 'inline-source-map',
@@ -56,10 +56,10 @@ module.exports = (env, argv) => {
       host: 'localhost',
       compress: true,
       hot: false,
-      quiet: true, // true: devServer起動時のconsole出力しない
+      quiet: false, // true: devServer起動時のconsole出力しない
       open: false, // npm run dev時にブラウザを開く場合true
       port: 3002, // port番号はデフォルトで8080, 既に使用されている場合は自動で8181になる。指定したい場合はここでする。
       watchOptions: { ignored: /node_modules/ }, // 差分を検知しないディレクトリ
     },
-  })
-}
+  });
+};
