@@ -1,6 +1,6 @@
 import React from 'react';
-import { Map } from '@components/Map';
+import ScrollTest from '@components/Map';
 
-const App = () => <Map />;
+const App = () => <ScrollTest />;
 
 export default App;
