@@ -26,11 +26,6 @@
     "Android >= 5.0",
     "last 2 ChromeAndroid versions"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run pre-commit"
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
@@ -89,6 +84,7 @@
     "core-js": "3",
     "emotion": "^10.0.27",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "stickybits": "^3.7.7"
   }
 }
