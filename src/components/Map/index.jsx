@@ -18,9 +18,11 @@ export const ZERO_TO_FIFTY_NINE = [...Array(60).keys()];
 
 const ScrollTest = () => {
   const leftElm = React.useRef(null);
+  const btnElm = React.useRef(null);
 
   React.useEffect(() => {
-    stickybits(leftElm.current, { useGetBoundingClientRect: true });
+    stickybits(leftElm.current, { useFixed: true });
+    stickybits(btnElm.current, { verticalPosition: 'bottom', useFixed: true });
   }, []);
 
   return (
@@ -28,9 +30,16 @@ const ScrollTest = () => {
       <div className={header}>ヘッダー</div>
       <div className={bodyWrap}>
         <div className={leftWrap} ref={leftElm}>
-          {ZERO_TO_FIFTY_NINE.map(i => (
-            <div className={mockItem} key={`left${i}`}>{`アイテム ${i}`}</div>
-          ))}
+          <div className={scrollItems}>
+            {ZERO_TO_FIFTY_NINE.map(i => (
+              <div className={mockItem} key={`left${i}`}>{`アイテム ${i}`}</div>
+            ))}
+          </div>
+          <div className={btnContainer} ref={btnElm}>
+            <button className={btn} type="button">
+              検索する
+            </button>
+          </div>
         </div>
         <div className={clsx([rightWrap, 'rightWrapForIE11'])}>
           <div className={rightContiner}>
@@ -45,6 +54,8 @@ const ScrollTest = () => {
   );
 };
 
+const LEFT_COL_W = '200px';
+
 const header = css`
   background-color: aquamarine;
   width: 100%;
@@ -58,11 +69,24 @@ const bodyWrap = css`
 `;
 
 const leftWrap = css`
+  //display: flex;
+  //flex-direction: column;
   flex-shrink: 0;
   background-color: #ffff99;
-  width: 200px;
+  width: ${LEFT_COL_W};
   height: 100vh;
   max-height: 100vh;
+
+  // IE11のときは左カラムに position:fixed が付与され、右要素が左カラムの下に隠れるため、その対策として左マージンを入れる
+  &.js-is-sticky + .rightWrapForIE11,
+  &.js-is-stuck + .rightWrapForIE11 {
+    margin-left: ${LEFT_COL_W};
+  }
+`;
+
+const scrollItems = css`
+  height: calc(100% - 64px);
+  //padding-bottom: 64px;
   overflow-y: scroll;
 
   // PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
@@ -74,12 +98,21 @@ const leftWrap = css`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
 
-  // IE11のときは左カラムに position:fixed が付与され、右要素が左カラムの下に隠れるため、その対策として左マージンを入れる
-  &.js-is-sticky + .rightWrapForIE11,
-  &.js-is-stuck + .rightWrapForIE11 {
-    margin-left: 200px;
-  }
+const btnContainer = css`
+  //position: fixed;
+  bottom: 0;
+  width: ${LEFT_COL_W};
+  height: 64px;
+  padding: 8px;
+`;
+
+const btn = css`
+  background-color: indianred;
+  height: 100%;
+  width: 100%;
+  text-align: center;
 `;
 
 const rightWrap = css`
