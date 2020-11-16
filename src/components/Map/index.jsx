@@ -1,18 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import stickybits from 'stickybits';
-import clsx from 'clsx';
-
-/**
- * TODO:
- * 右カラムに標準でmargin-leftを与える
- * (IEで微妙なタイミングで切り替わる問題があるため)
- *
- * 左カラムが画面トップに来たら固定
- * 下端で左カラム固定解除
- * スクロールバー削除
- * Enterボタン作成
- */
+// import clsx from 'clsx';
 
 export const ZERO_TO_FIFTY_NINE = [...Array(60).keys()];
 
@@ -23,6 +12,20 @@ const ScrollTest = () => {
   React.useEffect(() => {
     stickybits(leftElm.current, { useFixed: true });
     stickybits(btnElm.current, { verticalPosition: 'bottom', useFixed: true });
+
+    // Safariなどで左カラムが画面上部に見切れているときに、stickybitsに付与されるtop:0によって崩れることの対策
+    const func = () => {
+      const leftElmTop = leftElm.current.getBoundingClientRect().top; // 左カラムのスクロール位置
+      console.log(leftElmTop, 'timeout');
+      if (leftElmTop < 0) {
+        console.log('画面下部でリロードされた', leftElmTop);
+        leftElm.current.style.top = 'auto';
+        leftElm.current.style.bottom = 0;
+      }
+    };
+    setTimeout(() => {
+      func();
+    }, 500);
   }, []);
 
   return (
@@ -81,11 +84,8 @@ const scrollItems = css`
   overflow-y: scroll;
 
   // PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
-  /* IE, Edge 対応 */
-  -ms-overflow-style: none;
-  /* Firefox 対応 */
-  scrollbar-width: none;
-  /* 追加で必要なコード */
+  -ms-overflow-style: none; // IE, Edge 対応
+  scrollbar-width: none; // Firefox 対応
   &::-webkit-scrollbar {
     display: none;
   }
