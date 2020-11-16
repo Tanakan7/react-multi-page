@@ -41,8 +41,8 @@ const ScrollTest = () => {
             </button>
           </div>
         </div>
-        <div className={clsx([rightWrap, 'rightWrapForIE11'])}>
-          <div className={rightContiner}>
+        <div className={rightWrap}>
+          <div className={rightContainer}>
             {ZERO_TO_FIFTY_NINE.map(i => (
               <div className={mockItem} key={`right${i}`}>{`アイテム ${i}`}</div>
             ))}
@@ -63,25 +63,16 @@ const header = css`
 `;
 
 const bodyWrap = css`
-  display: flex;
   position: relative;
   margin-top: 32px;
 `;
 
 const leftWrap = css`
-  //display: flex;
-  //flex-direction: column;
-  flex-shrink: 0;
+  position: absolute;
   background-color: #ffff99;
   width: ${LEFT_COL_W};
   height: 100vh;
   max-height: 100vh;
-
-  // IE11のときは左カラムに position:fixed が付与され、右要素が左カラムの下に隠れるため、その対策として左マージンを入れる
-  &.js-is-sticky + .rightWrapForIE11,
-  &.js-is-stuck + .rightWrapForIE11 {
-    margin-left: ${LEFT_COL_W};
-  }
 `;
 
 const scrollItems = css`
@@ -101,8 +92,6 @@ const scrollItems = css`
 `;
 
 const btnContainer = css`
-  //position: fixed;
-  bottom: 0;
   width: ${LEFT_COL_W};
   height: 64px;
   padding: 8px;
@@ -116,11 +105,13 @@ const btn = css`
 `;
 
 const rightWrap = css`
+  position: relative;
+  left: ${LEFT_COL_W};
   background-color: cornflowerblue;
-  width: 100%;
+  width: calc(100% - ${LEFT_COL_W});
 `;
 
-const rightContiner = css``;
+const rightContainer = css``;
 
 const mockItem = css`
   margin: 16px auto;
