@@ -20,7 +20,7 @@ const ScrollTest = () => {
   const leftElm = React.useRef(null);
 
   React.useEffect(() => {
-    stickybits(leftElm.current);
+    stickybits(leftElm.current, { useGetBoundingClientRect: true });
   }, []);
 
   return (
@@ -75,8 +75,9 @@ const leftWrap = css`
     display: none;
   }
 
-  // IE11のときは左カラムに position:fixed が付与され、右要素が左カラムの下に隠れるため、その対策
-  &.js-is-sticky + .rightWrapForIE11 {
+  // IE11のときは左カラムに position:fixed が付与され、右要素が左カラムの下に隠れるため、その対策として左マージンを入れる
+  &.js-is-sticky + .rightWrapForIE11,
+  &.js-is-stuck + .rightWrapForIE11 {
     margin-left: 200px;
   }
 `;
