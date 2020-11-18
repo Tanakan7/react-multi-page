@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import stickybits from 'stickybits';
 // import clsx from 'clsx';
 
-export const ZERO_TO_FIFTY_NINE = [...Array(60).keys()];
+export const ZERO_TO_SIXTY = [...Array(61).keys()];
 
 const ScrollTest = () => {
   const leftElm = React.useRef(null);
@@ -34,7 +34,7 @@ const ScrollTest = () => {
       <div className={bodyWrap}>
         <div className={leftWrap} ref={leftElm}>
           <div className={scrollItems}>
-            {ZERO_TO_FIFTY_NINE.map(i => (
+            {ZERO_TO_SIXTY.map(i => (
               <div className={mockItem} key={`left${i}`}>{`アイテム ${i}`}</div>
             ))}
           </div>
@@ -46,7 +46,7 @@ const ScrollTest = () => {
         </div>
         <div className={rightWrap}>
           <div className={rightContainer}>
-            {ZERO_TO_FIFTY_NINE.map(i => (
+            {ZERO_TO_SIXTY.map(i => (
               <div className={mockItem} key={`right${i}`}>{`アイテム ${i}`}</div>
             ))}
           </div>
@@ -120,7 +120,7 @@ const mockItem = css`
 const footer = css`
   background-color: darkgreen;
   width: 100%;
-  height: 150px;
+  height: 2000px;
   margin-top: 32px;
 `;
 
