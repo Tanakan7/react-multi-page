@@ -62,11 +62,9 @@ const ScrollTest = () => {
           </div>
         </div>
         <div className={rightWrap}>
-          <div className={rightContainer}>
-            {ZERO_TO_SIXTY.map(i => (
-              <div className={mockItem} key={`right${i}`}>{`アイテム ${i}`}</div>
-            ))}
-          </div>
+          {ZERO_TO_SIXTY.map(i => (
+            <div className={mockItem} key={`right${i}`}>{`アイテム ${i}`}</div>
+          ))}
         </div>
       </div>
       <div className={footer}>フッター</div>
@@ -97,7 +95,6 @@ const leftWrap = css`
 
 const scrollItems = css`
   height: calc(100% - 64px);
-  //padding-bottom: 64px;
   overflow-y: scroll;
 
   // PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
@@ -127,8 +124,6 @@ const rightWrap = css`
   background-color: cornflowerblue;
   width: calc(100% - ${LEFT_COL_W});
 `;
-
-const rightContainer = css``;
 
 const mockItem = css`
   margin: 16px auto;
