@@ -1,11 +1,13 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import stickybits from 'stickybits';
-// import clsx from 'clsx';
+import clsx from 'clsx';
+import { isSP, isPC } from '@common/device';
 
 export const ZERO_TO_SIXTY = [...Array(61).keys()];
 
 const ScrollTest = () => {
+  const [modalVisible, setModalVisible] = React.useState(false);
   const leftElm = React.useRef(null);
   const btnElm = React.useRef(null);
 
@@ -39,18 +41,32 @@ const ScrollTest = () => {
       }
     };
 
-    setTimeout(() => {
-      adjustLeftColPosition();
-      adjustLeftColBtnPosition();
-    }, 500);
+    // PC版のときだけ
+    if (isPC()) {
+      setTimeout(() => {
+        adjustLeftColPosition();
+        adjustLeftColBtnPosition();
+      }, 500);
+    }
   }, []);
+
+  const CondToggleBtn = () => (
+    <button onClick={() => setModalVisible(!modalVisible)} type="button" style={{ textDecoration: 'underline' }}>
+      条件選択モーダル切り替え
+    </button>
+  );
 
   return (
     <div>
-      <div className={header}>ヘッダー</div>
+      <div className={header}>
+        <p>「ヘッダー」</p>
+        {isSP() && <CondToggleBtn />}
+      </div>
+
       <div className={bodyWrap}>
-        <div className={leftWrap} ref={leftElm}>
+        <div className={clsx([leftWrap, isSP() ? '-sp' : '-pc', modalVisible ? '-visible' : ''])} ref={leftElm}>
           <div className={scrollItems}>
+            <p>「Cond」</p>
             {ZERO_TO_SIXTY.map(i => (
               <div className={mockItem} key={`left${i}`}>{`アイテム ${i}`}</div>
             ))}
@@ -59,15 +75,17 @@ const ScrollTest = () => {
             <button className={btn} type="button">
               検索する
             </button>
+            {isSP() && <CondToggleBtn />}
           </div>
         </div>
-        <div className={rightWrap}>
+        <div className={clsx([rightWrap, isSP() ? '-sp' : '-pc'])}>
+          <p>「店舗カセット一覧」</p>
           {ZERO_TO_SIXTY.map(i => (
             <div className={mockItem} key={`right${i}`}>{`アイテム ${i}`}</div>
           ))}
         </div>
       </div>
-      <div className={footer}>フッター</div>
+      <div className={footer}>「フッター」</div>
     </div>
   );
 };
@@ -86,11 +104,23 @@ const bodyWrap = css`
 `;
 
 const leftWrap = css`
-  position: absolute;
   background-color: #ffff99;
-  width: ${LEFT_COL_W};
   height: 100vh;
-  max-height: 100vh;
+
+  &.-pc {
+    position: absolute;
+    width: ${LEFT_COL_W};
+  }
+  &.-sp {
+    display: none;
+    width: 100%;
+  }
+  &.-sp.-visible {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 `;
 
 const scrollItems = css`
@@ -109,6 +139,7 @@ const btnContainer = css`
   width: ${LEFT_COL_W};
   height: 64px;
   padding: 8px;
+  display: flex;
 `;
 
 const btn = css`
@@ -119,10 +150,13 @@ const btn = css`
 `;
 
 const rightWrap = css`
-  position: relative;
-  left: ${LEFT_COL_W};
   background-color: cornflowerblue;
-  width: calc(100% - ${LEFT_COL_W});
+
+  &.-pc {
+    position: relative;
+    left: ${LEFT_COL_W};
+    width: calc(100% - ${LEFT_COL_W});
+  }
 `;
 
 const mockItem = css`
