@@ -84,6 +84,7 @@
     "@emotion/css": "^11.0.0",
     "clsx": "^1.1.1",
     "core-js": "3",
+    "intersection-observer": "^0.11.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "stickybits": "^3.7.7"

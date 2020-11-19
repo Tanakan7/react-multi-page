@@ -1,6 +1,5 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import stickybits from 'stickybits';
 // import clsx from 'clsx';
 
 export const ZERO_TO_SIXTY = [...Array(61).keys()];
@@ -8,42 +7,6 @@ export const ZERO_TO_SIXTY = [...Array(61).keys()];
 const ScrollTest = () => {
   const leftElm = React.useRef(null);
   const btnElm = React.useRef(null);
-
-  React.useEffect(() => {
-    stickybits(leftElm.current, { useFixed: true });
-    stickybits(btnElm.current, { verticalPosition: 'bottom', useFixed: true });
-
-    /**
-     * リロード時に左カラムが画面上部に見切れているときに、stickybitsに付与されるtop:0により左カラムが見えない問題の対策
-     * Safari/Firefox/IE11 で発生
-     * (その後の位置は、stickybitsによって制御)
-     */
-    const adjustLeftColPosition = () => {
-      const leftElmTop = leftElm.current.getBoundingClientRect().top; // 左カラムのスクロール位置
-      console.log(leftElmTop, 'timeout');
-      if (leftElmTop < 0) {
-        console.log('画面下部でリロードされた', leftElmTop);
-        leftElm.current.style.top = 'auto';
-        leftElm.current.style.bottom = 0;
-      }
-    };
-    /**
-     * ページ最上部でのページ読み込み時に検索ボタンの位置を初期化する
-     * (その後の位置は、stickybitsによって制御)
-     */
-    const adjustLeftColBtnPosition = () => {
-      const scrollPositon = window.pageYOffset;
-      if (scrollPositon === 0) {
-        btnElm.current.style.position = 'fixed';
-        btnElm.current.style.bottom = 0;
-      }
-    };
-
-    setTimeout(() => {
-      adjustLeftColPosition();
-      adjustLeftColBtnPosition();
-    }, 500);
-  }, []);
 
   return (
     <div>
@@ -72,6 +35,7 @@ const ScrollTest = () => {
   );
 };
 
+/* ============ スタイル ============ */
 const LEFT_COL_W = '200px';
 
 const header = css`
