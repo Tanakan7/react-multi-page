@@ -21,6 +21,9 @@ const ScrollTest = () => {
   const btnElm = React.useRef(null);
 
   React.useEffect(() => {
+    /**
+     * ヘッダーとカセットエリア間をスクロールで行き来するときに要素を固定する処理
+     */
     const begin = () => {
       const options = {
         rootMargin: '32px', // ヘッダーとのマージン分
@@ -35,6 +38,12 @@ const ScrollTest = () => {
           btnElm.current.classList.add('-fixed');
         } else {
           // ヘッダーが見えなくなったとき
+
+          // カセットエリアを通過しているときは、左カラム固定をしない(end関数に任せる)
+          // 理由: フッターが見えるときに endによって左カラムの固定が解除 → beginで左カラム固定 の順で実行されたときに意図せず左カラムが固定されてしまうから
+          const footerVisible = leftElm.current.classList.contains('-fixToBottom');
+          if (footerVisible) return;
+
           console.log('begin 固定');
           leftElm.current.classList.add('-fixed');
           btnElm.current.classList.remove('-fixed');
@@ -44,6 +53,9 @@ const ScrollTest = () => {
       observer.observe(headerElm.current); // ターゲット要素を監視
     };
 
+    /**
+     * フッターとカセットエリア間をスクロールで行き来するときに要素を固定する処理
+     */
     const end = () => {
       const callback = entries => {
         if (entries[0].isIntersecting) {
