@@ -1,17 +1,76 @@
+import 'intersection-observer';
 import React from 'react';
 import { css } from '@emotion/css';
 // import clsx from 'clsx';
 
-export const ZERO_TO_SIXTY = [...Array(61).keys()];
+/**
+ * 指定した要素が一部でも画面に表示されていたらTrue
+ */
+const checkElmVisible = elm => {
+  const rect = elm.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < window.innerHeight;
+};
+
+const ZERO_TO_SIXTY = [...Array(61).keys()];
 
 const ScrollTest = () => {
+  const headerElm = React.useRef(null);
+  const footerElm = React.useRef(null);
+  const bodyElm = React.useRef(null);
   const leftElm = React.useRef(null);
   const btnElm = React.useRef(null);
 
+  React.useEffect(() => {
+    const begin = () => {
+      const options = {
+        rootMargin: '32px', // ヘッダーとのマージン分
+      };
+      const callback = entries => {
+        console.log(entries);
+        if (entries[0].isIntersecting) {
+          // ヘッダーが見えるようになったとき
+          if (checkElmVisible(footerElm.current)) return;
+          console.log('begin 解除');
+          leftElm.current.classList.remove('-fixed');
+        } else {
+          // ヘッダーが見えなくなったとき
+          console.log('begin 固定');
+          leftElm.current.classList.add('-fixed');
+        }
+      };
+      const observer = new IntersectionObserver(callback, options);
+      observer.observe(headerElm.current); // ターゲット要素を監視
+    };
+
+    const end = () => {
+      const callback = entries => {
+        if (entries[0].isIntersecting) {
+          // フッターが見えたとき
+          console.log('end 解除');
+          leftElm.current.classList.remove('-fixed');
+          leftElm.current.classList.add('-fixToBottom');
+        } else {
+          // フッターが見えなくなったとき
+          if (checkElmVisible(headerElm.current)) return;
+          console.log('end 固定');
+          leftElm.current.classList.add('-fixed');
+          leftElm.current.classList.remove('-fixToBottom');
+        }
+      };
+      const observer = new IntersectionObserver(callback);
+      observer.observe(footerElm.current);
+    };
+
+    begin();
+    end();
+  }, []);
+
   return (
     <div>
-      <div className={header}>ヘッダー</div>
-      <div className={bodyWrap}>
+      <div className={header} ref={headerElm}>
+        ヘッダー
+      </div>
+      <div className={bodyWrap} ref={bodyElm}>
         <div className={leftWrap} ref={leftElm}>
           <div className={scrollItems}>
             {ZERO_TO_SIXTY.map(i => (
@@ -30,7 +89,9 @@ const ScrollTest = () => {
           ))}
         </div>
       </div>
-      <div className={footer}>フッター</div>
+      <div className={footer} ref={footerElm}>
+        フッター
+      </div>
     </div>
   );
 };
@@ -55,6 +116,14 @@ const leftWrap = css`
   width: ${LEFT_COL_W};
   height: 100vh;
   max-height: 100vh;
+
+  &.-fixed {
+    position: fixed;
+    top: 0;
+  }
+  &.-fixToBottom {
+    bottom: 0;
+  }
 `;
 
 const scrollItems = css`
