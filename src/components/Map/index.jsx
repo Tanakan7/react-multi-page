@@ -32,10 +32,12 @@ const ScrollTest = () => {
           if (checkElmVisible(footerElm.current)) return;
           console.log('begin 解除');
           leftElm.current.classList.remove('-fixed');
+          btnElm.current.classList.add('-fixed');
         } else {
           // ヘッダーが見えなくなったとき
           console.log('begin 固定');
           leftElm.current.classList.add('-fixed');
+          btnElm.current.classList.remove('-fixed');
         }
       };
       const observer = new IntersectionObserver(callback, options);
@@ -142,6 +144,12 @@ const btnContainer = css`
   width: ${LEFT_COL_W};
   height: 64px;
   padding: 8px;
+  position: absolute;
+  bottom: 0;
+
+  &.-fixed {
+    position: fixed;
+  }
 `;
 
 const btn = css`
