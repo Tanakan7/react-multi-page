@@ -3,9 +3,7 @@ import React from 'react';
 import { css } from '@emotion/css';
 import clsx from 'clsx';
 
-/**
- * 指定した要素が一部でも画面に表示されていたらTrue
- */
+// 指定した要素が一部でも画面に表示されていたらTrue
 const checkElmVisible = elm => {
   const rect = elm.getBoundingClientRect();
   return rect.bottom > 0 && rect.top < window.innerHeight;
@@ -73,9 +71,7 @@ const ScrollTest = () => {
 
   // 左カラムと「検索する」ボタン固定処理
   React.useEffect(() => {
-    /**
-     * ヘッダーとカセットエリア間をスクロールで行き来するときに要素を固定する処理
-     */
+    // ヘッダーとカセットエリア間をスクロールで行き来するときに要素を固定する処理
     const begin = () => {
       const options = {
         rootMargin: '32px', // ヘッダーとのマージン分
@@ -84,7 +80,6 @@ const ScrollTest = () => {
         if (entries[0].isIntersecting) {
           // ヘッダーが見えるようになったとき
           if (checkElmVisible(footerElm.current)) return;
-          console.log('begin 解除');
           leftElm.current.classList.remove('-fixed');
           btnElm.current.classList.add('-fixed');
         } else {
@@ -95,7 +90,6 @@ const ScrollTest = () => {
           const footerVisible = leftElm.current.classList.contains('-fixToBottom');
           if (footerVisible) return;
 
-          console.log('begin 固定');
           leftElm.current.classList.add('-fixed');
           btnElm.current.classList.remove('-fixed');
         }
@@ -104,20 +98,16 @@ const ScrollTest = () => {
       observer.observe(headerElm.current); // ターゲット要素を監視
     };
 
-    /**
-     * フッターとカセットエリア間をスクロールで行き来するときに要素を固定する処理
-     */
+    // フッターとカセットエリア間をスクロールで行き来するときに要素を固定する処理
     const end = () => {
       const callback = entries => {
         if (entries[0].isIntersecting) {
           // フッターが見えたとき
-          console.log('end 解除');
           leftElm.current.classList.remove('-fixed');
           leftElm.current.classList.add('-fixToBottom');
         } else {
           // フッターが見えなくなったとき
           if (checkElmVisible(headerElm.current)) return;
-          console.log('end 固定');
           leftElm.current.classList.add('-fixed');
           leftElm.current.classList.remove('-fixToBottom');
         }
@@ -194,6 +184,7 @@ const leftWrap = css`
 const scrollItems = css`
   height: calc(100% - 64px);
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 
   // PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
   -ms-overflow-style: none; // IE, Edge 対応
