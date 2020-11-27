@@ -79,41 +79,6 @@ const ScrollTest = () => {
     end();
   }, []);
 
-  React.useEffect(() => {
-    // ヘッダーが見えているときの左カラムの長さを計算
-    const adjustLeftColHeightWithoutAboveArea = () => {
-      try {
-        const len = window.innerHeight - bodyElm.current.getBoundingClientRect().top;
-        // console.log(len, 'above');
-        leftElm.current.style.height = `${len}px`;
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    // フッターが見えているときの左カラムの長さを計算
-    const adjustLeftColHeightWithoutBelowArea = () => {
-      try {
-        const len = bodyElm.current.getBoundingClientRect().bottom;
-        // console.log(len, 'below');
-        // TODO: カセットエリアが見えなくなったら発火させない
-        leftElm.current.style.height = `${len}px`;
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    // TODO: スロットル
-    window.addEventListener('scroll', () => {
-      if (checkElmVisible(headerElm.current)) {
-        adjustLeftColHeightWithoutAboveArea();
-      } else if (checkElmVisible(footerElm.current)) {
-        adjustLeftColHeightWithoutBelowArea();
-      } else {
-        leftElm.current.style.height = '100vh'; // 左カラムが固定されているとき
-      }
-    });
-  }, []);
-
   return (
     <div>
       <div className={header} ref={headerElm}>
