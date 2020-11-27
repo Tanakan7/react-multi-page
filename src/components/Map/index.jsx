@@ -1,7 +1,7 @@
 import 'intersection-observer';
 import React from 'react';
 import { css } from '@emotion/css';
-// import clsx from 'clsx';
+import clsx from 'clsx';
 
 /**
  * 指定した要素が一部でも画面に表示されていたらTrue
@@ -12,6 +12,7 @@ const checkElmVisible = elm => {
 };
 
 const ZERO_TO_SIXTY = [...Array(61).keys()];
+const DEFAULT_THRESHOLD = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
 
 const ScrollTest = () => {
   const headerElm = React.useRef(null);
@@ -20,6 +21,57 @@ const ScrollTest = () => {
   const leftElm = React.useRef(null);
   const btnElm = React.useRef(null);
 
+  /**
+   * 左カラムの高さを表示している高さと同等にする
+   * @type {number} visibleAreaHeight 左カラム以外の要素の高さ
+   */
+  const adjustLeftColHeight = React.useCallback(visibleAreaHeight => {
+    leftElm.current.style.height = `${window.innerHeight - visibleAreaHeight}px`;
+  }, []);
+
+  // 左カラムの高さ調整処理
+  React.useEffect(() => {
+    const ADJUST_DEFAULT_OPTIONS = { threshold: DEFAULT_THRESHOLD };
+    // ヘッダーが見えている時の調整
+    const begin = () => {
+      const callback = entries => {
+        if (entries[0].isIntersecting) {
+          // ヘッダーが見えているとき
+          const visibleAreaHeight = entries[0].intersectionRect.height;
+          const MARGIN_HEIGHT = 32;
+          adjustLeftColHeight(visibleAreaHeight + MARGIN_HEIGHT);
+        } else {
+          // ヘッダーが見えなくなったとき
+          leftElm.current.style.height = '';
+        }
+      };
+      const observer = new IntersectionObserver(callback, ADJUST_DEFAULT_OPTIONS);
+      const targets = document.querySelectorAll('.js-observe-top');
+      targets.forEach(target => observer.observe(target)); // 複数の要素を考慮する必要はなさそう
+    };
+    // フッターが見えている時の調整
+    const end = () => {
+      const callback = entries => {
+        if (entries[0].isIntersecting) {
+          // フッターが見えているとき
+          const visibleAreaHeight = entries[0].intersectionRect.height;
+          const MARGIN_HEIGHT = 32;
+          adjustLeftColHeight(visibleAreaHeight + MARGIN_HEIGHT);
+        } else {
+          // フッターが見えなくなったとき
+          leftElm.current.style.height = '';
+        }
+      };
+      const observer = new IntersectionObserver(callback, ADJUST_DEFAULT_OPTIONS);
+      const targets = document.querySelectorAll('.js-observe-bottom');
+      targets.forEach(target => observer.observe(target));
+    };
+
+    begin();
+    end();
+  }, []);
+
+  // 左カラムと「検索する」ボタン固定処理
   React.useEffect(() => {
     /**
      * ヘッダーとカセットエリア間をスクロールで行き来するときに要素を固定する処理
@@ -29,7 +81,6 @@ const ScrollTest = () => {
         rootMargin: '32px', // ヘッダーとのマージン分
       };
       const callback = entries => {
-        console.log(entries);
         if (entries[0].isIntersecting) {
           // ヘッダーが見えるようになったとき
           if (checkElmVisible(footerElm.current)) return;
@@ -81,11 +132,11 @@ const ScrollTest = () => {
 
   return (
     <div>
-      <div className={header} ref={headerElm}>
+      <div className={clsx([header, 'js-observe-top'])} ref={headerElm}>
         ヘッダー
       </div>
       <div className={bodyWrap} ref={bodyElm}>
-        <div className={leftWrap} ref={leftElm}>
+        <div className={clsx([leftWrap])} ref={leftElm}>
           <div className={scrollItems}>
             {ZERO_TO_SIXTY.map(i => (
               <div className={mockItem} key={`left${i}`}>{`アイテム ${i}`}</div>
@@ -103,7 +154,7 @@ const ScrollTest = () => {
           ))}
         </div>
       </div>
-      <div className={footer} ref={footerElm}>
+      <div className={clsx([footer, 'js-observe-bottom'])} ref={footerElm}>
         フッター
       </div>
     </div>
@@ -158,6 +209,7 @@ const btnContainer = css`
   padding: 8px;
   position: absolute;
   bottom: 0;
+  background-color: gray;
 
   &.-fixed {
     position: fixed;
@@ -185,7 +237,7 @@ const mockItem = css`
 const footer = css`
   background-color: darkgreen;
   width: 100%;
-  height: 2000px;
+  height: 200px;
   margin-top: 32px;
 `;
 
