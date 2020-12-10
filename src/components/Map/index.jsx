@@ -186,12 +186,14 @@ const scrollItems = css`
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 
-  // PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
+  /*
+  PC版のときだけ(SPではsmooth scroll付与。多分両立は不可)
   -ms-overflow-style: none; // IE, Edge 対応
   scrollbar-width: none; // Firefox 対応
   &::-webkit-scrollbar {
     display: none;
   }
+  */
 `;
 
 const btnContainer = css`
